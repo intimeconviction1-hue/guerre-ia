@@ -20,7 +20,14 @@ cabinet, un canal de négociation et un bilan qui juge vos choix sur le temps lo
 | `manifest.webmanifest` | installation sur l'écran d'accueil |
 | `icon.svg`, `icon-192.png`, `icon-512.png` | icônes |
 
-Version du jeu : **20.2** (`<meta name="game-version">`).
+Version du jeu : **21.1** (`<meta name="game-version">`).
+
+## Hébergement
+
+Le jeu est servi par GitHub Pages : **https://intimeconviction1-hue.github.io/guerre-ia/**.
+Tous les chemins sont relatifs, donc il fonctionne aussi bien à la racine d'un domaine
+que dans un sous-dossier. Quand `/api/ai` répond 404 (hébergement statique), le jeu
+retire de lui-même les boutons de synchronisation, de salon à distance et d'IA.
 
 ## Ce qui n'est pas dans ce dépôt
 
@@ -30,7 +37,7 @@ Le site d'origine s'appuie sur trois routes serveur dont le code n'est pas ici :
 - `/api/saves` : synchronisation des parties avec un compte ;
 - `/api/rooms` : salons de duel à distance.
 
-Sans elles, le jeu reste entièrement jouable : les conseillers utilisent leurs
+Sans elles (c'est le cas sur GitHub Pages), le jeu reste entièrement jouable : les conseillers utilisent leurs
 réactions préparées, l'adversaire des duels est à règles fixes, et les parties
 sont sauvegardées dans le navigateur.
 
