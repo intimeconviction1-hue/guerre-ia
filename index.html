@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta name="description" content="GUERRE IA : incarnez un dirigeant, négociez et décidez au cœur des grandes crises historiques."><meta name="theme-color" content="#0c1511"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="GUERRE IA"><meta name="game-version" content="20.2"><link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/icon.svg"><link rel="apple-touch-icon" href="/icon-192.png"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0}[hidden]{display:none!important}</style></head><body>
+<!doctype html><html lang="fr"><head><meta name="description" content="GUERRE IA : incarnez un dirigeant, négociez et décidez au cœur des grandes crises historiques."><meta name="theme-color" content="#0c1511"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="GUERRE IA"><meta name="game-version" content="21.0"><link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/icon.svg"><link rel="apple-touch-icon" href="/icon-192.png"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0}[hidden]{display:none!important}</style></head><body>
 <title>GUERRE IA</title>
 <style>
 /* Feuille consolidée V18 : couches V12 à V17 fusionnées dans leur ordre d’origine ; règles jamais appliquées retirées après mesure de couverture sur trois tailles d’écran. */
@@ -2119,4 +2119,50 @@ async function uxConnectAI(){try{const r=await fetch('/api/ai',{cache:'no-store'
 const uxPlayAI=play;play=function(){uxPlayAI();const council=document.querySelector('[data-drawer="conseil"] .panel');if(council){council.insertAdjacentHTML('beforeend',`<p class="note">${AI.sample?'Avis générés par IA à la demande. Ils peuvent contenir des erreurs ; les repères historiques du jeu restent distincts.':'Le conseil préparé reste disponible. '+(uxAiStatus==='checking'?'Vérification de la connexion IA…':uxAiStatus==='signin'?'Connectez-vous pour consulter l’IA.':uxAiStatus==='unconfigured'?'La connexion de l’IA est en cours de configuration.':'Connexion IA momentanément indisponible.')}</p>${!AI.sample?'<button data-reconnect-ai>Vérifier la connexion IA</button>':''}`)}};
 document.addEventListener('click',async e=>{if(!e.target.closest('[data-reconnect-ai]'))return;e.preventDefault();e.stopImmediatePropagation();await uxConnectAI();uxToast(AI.sample?'Le conseil IA et la négociation sont connectés.':'Connexion IA non disponible pour le moment. Le jeu reste accessible.')},true);
 uxConnectAI();
+</script><style id="v21">
+/* V21 · ergonomie. Mesuré à 375 et 1440 px : la dépêche commençait à 530 px et les choix à 990 px
+   (1 200 px au téléphone), sous le premier écran ; les jauges étaient invisibles au téléphone pendant
+   qu'on choisissait ; le bouton « Prendre mes fonctions » était à deux écrans sous le choix du rôle. */
+
+/* 1. En-tête de partie compact : le jeu commence par la dépêche, pas par trois bandeaux. */
+.ux-playhead{padding:12px 0}
+.ux-playhead p{margin-top:4px}
+.ux-context{padding:2px 0}
+.ux-status{margin:8px 0 0;padding:4px 4px 4px 12px;gap:8px;flex-wrap:nowrap}
+.ux-status>span:not(.ux-dot){flex:1;min-width:0}
+.ux-status button{min-height:44px;flex:none}
+
+/* 2. Au téléphone, les jauges restent sous les yeux pendant la décision. */
+@media(max-width:860px){
+  .mstatus{display:flex!important;position:sticky;top:0;z-index:12;margin:8px -3px 0}
+  .ux-playhead{gap:8px}
+  .ux-playhead h1{font-size:26px}
+}
+
+/* 3. Fiche de crise : le bouton de départ reste visible sous le choix du rôle. */
+#ux-setup [type=submit]{position:sticky;bottom:-18px;width:calc(100% + 36px);margin:12px -18px -18px;
+  border-radius:0 0 15px 15px;padding:16px;min-height:56px;box-shadow:0 -12px 24px #0e1912}
+
+/* 4. Cartes de crise plus courtes au téléphone : le pied tient sur une ligne. */
+@media(max-width:860px){
+  .ux-cardfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .ux-cardfoot .primary{width:auto;flex:none}
+  .ux-filters select{min-width:0;width:100%;text-overflow:ellipsis}
+}
+
+/* 5. Plancher de lecture : plus aucun texte sous 11 px (il en restait à 8, 9 et 10 px). */
+.chip,.unl,.crise .v17-scene-label,.v17-tile span,.v17-playstats span,.depeche .vecu-lieu span,
+.ux-playhead .kicker,.ux-hero>.kicker{font-size:11px}
+.depeche .stamp{font-size:10.5px}
+header.top .kicker{font-size:10px}
+@media(max-width:860px){.wrap::before{font-size:10px;letter-spacing:1px}}
+/* 6. En partie, au téléphone, le bandeau décoratif du haut cède sa place (83 px) à la dépêche. */
+@media(max-width:860px){body.v21-en-partie .wrap::before{display:none}}
+</style><script>
+/* V21 · ergonomie. La ligne d'état disait deux fois la même chose (« Partie enregistrée sur cet
+   appareil » puis « Sauvegarde sur cet appareil ») : le second libellé ne parle que s'il dit autre chose. */
+{const v21Play=play;play=function(){v21Play();document.body.classList.add("v21-en-partie");const s=document.querySelector('[data-sync-status]');if(s&&s.textContent.trim()==='Sauvegarde sur cet appareil')s.remove()};
+ window.addEventListener('resize',()=>{if(innerWidth>850)document.querySelectorAll('.side .ux-drawer').forEach(d=>d.open=true)},{passive:true});
+ const v21Render=render;render=function(){if(!S||S.done||S.brief||D||VIEW)document.body.classList.remove("v21-en-partie");return v21Render()};
+ render();}
 </script></body></html>
